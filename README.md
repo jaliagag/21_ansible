@@ -15,6 +15,9 @@ replacing default ansible configuration with file ansible.cfg (same dir)
 [defaults]
 INVENTORY = inventory
 ```
+Ansible does first **pre_tasks, then roles, then tasks and then post-tasks**.
+
+`ansible-playbook -i inventory main.yam --syntax-check`
 
 ## ad-hoc
 
@@ -54,11 +57,22 @@ Say that we've launched a bunch of jobs on the server and we want to see the sta
 
 shell module will work with pipes and redirections: `ansible -i inventory multi -b -m shell -a "tail /var/log/messages | grep ansible | wc -l"`
 
-episode 3 - 19:59
+```ini
+# on the ansible.cfg
+[ssh_connection]
+pipelining = True
+```
+
+Faster playbooks
 
 ## playbooks
 
-tasks
+`ansible-inventory --list -i inventory` what information ansible knows
+
+```yaml
+---
+
+```
 
 ## modules
 
@@ -66,6 +80,8 @@ tasks
 - yum module: `ansible multi -m yum -a 'name=ntp state=present'`
 - service module: `ansible multi -m service -a 'name=ntpd state=started enabled=yes'`
 - set up a user for mysql: `ansible -i inventory db -b -m mysql_user "name=django host=% password=12345 priv=*.*:ALL state=present"`
+- cron module: `ansible -i inventory multi -b -m cron -a "name=wharever hour=4 job=/home/script.sh"`
+- git repo: `ansible -i inventory multi -b -m git -a "repo-github_url_goes_here destination=/opt/apps/destination update=yes version=1.2.4"`
 
 ## flags
 
