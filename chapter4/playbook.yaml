@@ -1,0 +1,48 @@
+# > folded scaler - joins lines with a space
+# | multi line scaler - joins lines one after the other, with an enter like a shell script
+# use the three lines to separate files
+---
+- name: Install Apache
+  hosts: all # we can limit where does this playbook runs - --limit=<ip>
+  become: yes # or when you run the playbook use the flag -b
+
+  tasks:
+    - name: Install Apache.
+      #      command: yum install --quiet -y httpd httpd-devel
+      #      yum: name=httpd state=present
+      yum:
+        name:
+          - httpd
+          - httpd-devel
+        state: present
+
+    - name: Copy configuration files
+      copy:
+        src: "{{ item.src }}" # item['src'] this way is better if there is a dash or something weird
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items: # multiple things we are going to process
+        - src: httpd.conf # files can be on the host running ansible
+          dest: /etc/httpd/conf/httpd.conf
+        - src: httpd-vhosts 
+          dest: /etc/httpd/conf/httpd-vhosts.conf
+
+
+    - name: Ensure apache is started and configure it to run at boot
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+
+      #    - name: Copy configuration files
+      #command: >
+      #  cp httpd.conf /etc/httpd/conf/httpd.conf
+      #  cp httpd-vhosts /etc/httpd/conf/httpd-vhosts.conf
+
+          #    - name: Start Apache and configure it to run at book
+          #      command: service httpd start
+          #    - command: chkconfig httpd on
+
