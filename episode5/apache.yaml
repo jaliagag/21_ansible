@@ -3,33 +3,21 @@
   hosts: all
   become: true
 
+  vars:
+    apache_package: httpd
+    apache_service: httpd
+    apache_config_dir: /etc/httpd/conf.d/
+
   handlers:
     - name: restart apache
       service:
-        name: httpd
+        name: "{{ apache_service }}"
         state: restarted
 
   tasks:
-
-    - name: add an environment variable to the remote user's shell
-      lineinfile:
-        dest: "~/.bash_profile"
-        regexp: '^ENV_VAR='
-        line: 'ENV_VAR=value'
-      become: false
-
-    - name: get the value of an evironment variable
-      shell: 'source ~/.bash_profile && echo $ENV_VAR'
-      #      shell: 'echo $ENV_VAR'
-      register: foo
-
-    - name: debug - show ansible variable value
-      debug: 
-        msg: "The value of the variable is {{ lookup('env','ENV_VAR') }}"
-
     - name: ensure apache is installed
       yum:
-        name: httpd
+        name: "{{ apache_package }}"
         state: present
 
     - name: copy config file
@@ -40,7 +28,7 @@
 
     - name: ensure apache is running and enabled
       service:
-        name: httpd
+        name: "{{ apache_service }}"
         state: started
         enabled: true
 
