@@ -91,6 +91,22 @@ handlers can be used to make api calls (slack, for instance)
 
 we can turn off become for any task by adding `become: false`
 
+calling variables on another file:
+
+```yaml
+# file 1
+- name: playbook1
+  hosts: all
+  become: true
+
+  vars:
+    - vars/main.yaml
+
+# file 2
+---
+key: value
+```
+
 ## modules
 
 - ping module: `ansible -i inventory example -m ping -u jaliaga`
