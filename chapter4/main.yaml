@@ -19,7 +19,7 @@
   
   tasks:
     - name: Install Java
-      #apt: name=openjdk-8-jdk state=present
+      #      apt: name=openjdk-8-jdk state=present
       #package: name=openjdk-8-jdk state=present
       yum: 
         name: java-1.8.0-openjdk-devel

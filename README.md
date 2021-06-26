@@ -74,6 +74,23 @@ Faster playbooks
 
 ```
 
+## handlers
+
+handlers are tasks - the name of the handler is used to notify it to run - `notify: <name of the handler>` - if there are changes, whatever is it that the handler does, it is triggered. handlers are, by default triggered _at the end of the playbook_. to make sure that the handler is run mid-playbook-run, we can add an ansible meta function
+
+```yaml
+- name: make sure handlers are flushed immediately
+  meta: flush_handlers
+```
+
+handlers won't run if the playbook fails; we can add `--force-handlers` to make sure that the handlers are execute, no matter the outcome of the playbook.
+
+handlers can be used to make api calls (slack, for instance)
+
+## variables
+
+we can turn off become for any task by adding `become: false`
+
 ## modules
 
 - ping module: `ansible -i inventory example -m ping -u jaliaga`
