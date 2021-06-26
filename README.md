@@ -107,6 +107,14 @@ calling variables on another file:
 key: value
 ```
 
+## vault
+
+`ansible-vault encrypt <file>` - it asks for a password ('test'). it encrypts the file. when running a playbook, we have to add `--ask-vault-pass`. we can use `--vault-password-file <file>` if we have the password stored in a file. we can also run `ansible-vault decrypt <file>` to return it to its original text - we can edit the file, while encrypted `ansible-vault edit <file>`
+
+## conditionals
+
+## roles
+
 ## modules
 
 - ping module: `ansible -i inventory example -m ping -u jaliaga`

@@ -1,7 +1,12 @@
 ---
 - name: Install apache
-  hosts: centos
+  hosts: all
   become: true
+
+  vars:
+    apache_package: httpd
+    apache_service: httpd
+    apache_config_dir: /etc/httpd/conf.d/
 
   handlers:
     - name: restart apache
@@ -9,22 +14,11 @@
         name: "{{ apache_service }}"
         state: restarted
 
-  pre_tasks:
-    - debug: var=ansible_os_family
-    - name: Load variable files
-      include_vars: "{{ item }}"
-      with_first_found:
-        - "vars/apache_{{ ansible_os_family }}.yaml"
-        - "vars/apache_default.yaml"
-
   tasks:
     - name: ensure apache is installed
-      package:
+      yum:
         name: "{{ apache_package }}"
         state: present
-      register: foo
-    
-    - debug: var=foo['results']
 
     - name: copy config file
       copy:
@@ -39,3 +33,4 @@
         enabled: true
 
 
+# this playbook would ONLY work for centos/rhel based distros
