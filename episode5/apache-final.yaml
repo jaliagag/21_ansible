@@ -1,0 +1,33 @@
+---
+- name: Install apache
+  hosts: all
+  become: true
+
+  handlers:
+    - name: restart apache
+      service:
+        name: "{{ apache_service }}"
+        state: restarted
+
+  pre_tasks: 
+
+  tasks:
+    - name: ensure apache is installed
+      yum:
+        name: "{{ apache_package }}"
+        state: present
+
+    - name: copy config file
+      copy:
+        src: files/test.conf
+        dest: /etc/httpd/conf.d/test.conf
+      notify: restart apache
+
+    - name: ensure apache is running and enabled
+      service:
+        name: "{{ apache_service }}"
+        state: started
+        enabled: true
+
+
+# this playbook would ONLY work for centos/rhel based distros

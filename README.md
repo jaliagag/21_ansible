@@ -107,6 +107,25 @@ calling variables on another file:
 key: value
 ```
 
+```yaml
+# VIEWING DEBUG
+tasks
+  - name: Ensure apache is insalled
+    package:
+      name: "{{ apache_package }}"
+      state: present
+    register: foo
+
+  - debug: var=foo
+# this will print information about that variable to the stdout
+# we can use dot notation to access values
+  - debug: var=foo.rc 
+  # or
+  - debug: var=foo['rc'] # <<<--- PREFERRED 
+```
+
+View system information: `ansible -i inventory <host> -m setup` - view how system variables are named.
+
 ## vault
 
 `ansible-vault encrypt <file>` - it asks for a password ('test'). it encrypts the file. when running a playbook, we have to add `--ask-vault-pass`. we can use `--vault-password-file <file>` if we have the password stored in a file. we can also run `ansible-vault decrypt <file>` to return it to its original text - we can edit the file, while encrypted `ansible-vault edit <file>`
@@ -128,4 +147,5 @@ key: value
 
 - _-B_: maximum alloted time for a job to run; if it's exceeded, ansible stops the run.
 - _-P 0_: runs the command on the server side as nohup
+
 
